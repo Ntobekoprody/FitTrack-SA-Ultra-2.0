@@ -159,7 +159,11 @@ fun NutritionScreen(
                         }
                     }
 
-                    Text(text = "Saves to local device · Auto-syncs when online", color = textColor.copy(alpha = 0.7f), fontSize = 12.sp)
+                    Text(
+                        text = "Saves to local device · Auto-syncs when online",
+                        color = textColor.copy(alpha = 0.7f),
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
