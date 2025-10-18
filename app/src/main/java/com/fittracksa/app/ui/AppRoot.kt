@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -116,7 +117,7 @@ fun AppRoot(
                                 androidx.compose.material3.Text(
                                     text = item.label,
                                     color = if (currentRoute == item.destination.route) activeColor else inactiveColor,
-                                    fontSize = androidx.compose.ui.unit.sp(11)
+                                    fontSize = 11.sp
                                 )
                             },
                             colors = androidx.compose.material3.NavigationBarItemDefaults.colors(

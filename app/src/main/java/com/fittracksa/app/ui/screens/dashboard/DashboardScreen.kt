@@ -4,13 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AwardStar
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Refresh
@@ -147,7 +149,7 @@ fun DashboardScreen(
                     }
                     FitSecondaryButton(
                         label = strings.viewStreaks,
-                        leadingIcon = Icons.Rounded.AwardStar
+                        leadingIcon = Icons.Rounded.Star
                     ) { onNavigate(Destination.Achievements) }
                 }
             }
@@ -163,7 +165,7 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun DashboardStatCard(title: String, value: String, icon: ImageVector, isDark: Boolean) {
+private fun RowScope.DashboardStatCard(title: String, value: String, icon: ImageVector, isDark: Boolean) {
     val container = if (isDark) Black else White
     val textColor = if (isDark) Lime else Black
     Card(
@@ -198,7 +200,7 @@ private fun AchievementRow(achievement: AchievementEntity, isDarkMode: Boolean) 
             modifier = Modifier.height(40.dp)
         ) {
             Icon(
-                imageVector = Icons.Rounded.AwardStar,
+                imageVector = Icons.Rounded.Star,
                 contentDescription = null,
                 tint = Lime,
                 modifier = Modifier.padding(8.dp)
