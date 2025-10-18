@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AwardStar
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -134,7 +135,7 @@ fun ProgressScreen(
                             }
                         }
                     }
-                    FitPrimaryButton(label = "View Details", modifier = Modifier.fillMaxWidth(), leadingIcon = Icons.Rounded.AwardStar) {
+                    FitPrimaryButton(label = "View Details", modifier = Modifier.fillMaxWidth(), leadingIcon = Icons.Rounded.Star) {
                         onShowAchievements()
                     }
                 }
@@ -231,7 +232,7 @@ private fun AchievementBadge(achievement: AchievementEntity, isDarkMode: Boolean
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Rounded.AwardStar, contentDescription = null, tint = Black)
+            Icon(Icons.Rounded.Star, contentDescription = null, tint = Black)
         }
         Text(achievement.badgeName, color = if (isDarkMode) Lime else Black, style = MaterialTheme.typography.bodySmall, maxLines = 1)
     }
