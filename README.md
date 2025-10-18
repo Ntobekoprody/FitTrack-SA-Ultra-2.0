@@ -4,7 +4,7 @@ FitTrack SA is a minimalist Android app written in Kotlin/Jetpack Compose that k
 
 ## Prerequisites
 - Android Studio Iguana or newer with the Android Gradle Plugin 8.3+ support
-- JDK 17 (bundled with Android Studio) or JDK 21 when running the Gradle wrapper 8.6
+- JDK 17 or newer (Gradle can auto-provision a matching toolchain if none is installed)
 - Android SDK Platform 34 and Google Maven repository enabled
 
 ## Building the app
