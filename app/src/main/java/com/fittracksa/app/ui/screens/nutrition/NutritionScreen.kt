@@ -256,7 +256,7 @@ private fun MealRow(meal: MealEntity, formatter: DateTimeFormatter, isDarkMode: 
     }
 }
 
-private fun List<MealEntity> filterTodayCalories(): Int {
+private fun List<MealEntity>.filterTodayCalories(): Int {
     val zone = ZoneId.systemDefault()
     val today = LocalDate.now(zone)
     return filter { it.timestamp.atZone(zone).toLocalDate() == today }.sumOf { it.calories }
