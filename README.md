@@ -1,2 +1,13 @@
 # FitTrack-SA-Ultra-2.0
-The focus on offline-first functionality, gamification, and multi-language support ensures the app is not only engaging but also inclusive. The use of REST APIs, RoomDB, Firebase/Azure services, and biometric authentication provides a strong technical foundation for a secure and scalable solution.
+
+FitTrack SA is a minimalist Android app written in Kotlin/Jetpack Compose that keeps activity and nutrition logs with an offline-first Room database and a dark-mode friendly black/lime palette.
+
+## Building the app
+
+```bash
+./gradlew assembleDebug
+```
+
+> **Note:** The repository ships a lightweight wrapper script. If the embedded Gradle wrapper binaries are not present on your system, install Gradle locally or regenerate the wrapper via `gradle wrapper` before running the command.
+
+Open the project in Android Studio to install the `app` module on a device or emulator.
