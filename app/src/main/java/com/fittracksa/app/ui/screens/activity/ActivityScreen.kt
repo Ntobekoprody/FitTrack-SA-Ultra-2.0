@@ -58,14 +58,16 @@ fun ActivityScreen(
             value = activityType,
             onValueChange = { activityType = it },
             label = { Text(strings.selectType, color = textColor) },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = textColor,
-                unfocusedBorderColor = textColor,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = textColor,
+                unfocusedIndicatorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
                 cursorColor = textColor,
-                focusedContainerColor = surface,
-                unfocusedContainerColor = surface
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor
             ),
             textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()
@@ -75,14 +77,16 @@ fun ActivityScreen(
             value = duration,
             onValueChange = { duration = it.filter { char -> char.isDigit() } },
             label = { Text(strings.setDuration, color = textColor) },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = textColor,
-                unfocusedBorderColor = textColor,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = textColor,
+                unfocusedIndicatorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
                 cursorColor = textColor,
-                focusedContainerColor = surface,
-                unfocusedContainerColor = surface
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor
             ),
             textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()

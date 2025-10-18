@@ -68,14 +68,16 @@ fun NutritionScreen(
             value = description,
             onValueChange = { description = it },
             label = { Text(strings.addFood, color = textColor) },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = textColor,
-                unfocusedBorderColor = textColor,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = textColor,
+                unfocusedIndicatorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
                 cursorColor = textColor,
-                focusedContainerColor = surface,
-                unfocusedContainerColor = surface
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor
             ),
             textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()
@@ -85,14 +87,16 @@ fun NutritionScreen(
             value = calories,
             onValueChange = { calories = it.filter { char -> char.isDigit() } },
             label = { Text("Calories", color = textColor) },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = textColor,
-                unfocusedBorderColor = textColor,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = textColor,
+                unfocusedIndicatorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
                 cursorColor = textColor,
-                focusedContainerColor = surface,
-                unfocusedContainerColor = surface
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor
             ),
             textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()
