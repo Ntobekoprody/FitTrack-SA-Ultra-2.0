@@ -23,6 +23,7 @@ import com.fittracksa.app.SharedDataViewModel
 import com.fittracksa.app.ui.AppStrings
 import com.fittracksa.app.ui.screens.common.FitButton
 import com.fittracksa.app.ui.theme.Black
+import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
 import java.time.format.DateTimeFormatter
 
