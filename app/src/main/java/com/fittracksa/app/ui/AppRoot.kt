@@ -90,11 +90,15 @@ fun AppRoot(
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showBottomBar = currentRoute != Destination.Login.route
+    val isDark = userSettings.isDarkMode
+    val barContainer = if (isDark) Black else White
+    val activeColor = if (isDark) Lime else Lime
+    val inactiveColor = if (isDark) Lime.copy(alpha = 0.6f) else Black.copy(alpha = 0.6f)
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar(containerColor = Black, contentColor = Lime) {
+                NavigationBar(containerColor = barContainer, contentColor = activeColor) {
                     bottomItems.forEach { item ->
                         NavigationBarItem(
                             selected = currentRoute == item.destination.route,
@@ -107,13 +111,20 @@ fun AppRoot(
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(item.icon, contentDescription = item.label, tint = Lime) },
-                            label = {},
+                            icon = { Icon(item.icon, contentDescription = item.label) },
+                            label = {
+                                androidx.compose.material3.Text(
+                                    text = item.label,
+                                    color = if (currentRoute == item.destination.route) activeColor else inactiveColor,
+                                    fontSize = androidx.compose.ui.unit.sp(11)
+                                )
+                            },
                             colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                                selectedIconColor = Lime,
-                                selectedTextColor = Lime,
-                                unselectedIconColor = Lime.copy(alpha = 0.7f),
-                                indicatorColor = Black
+                                selectedIconColor = activeColor,
+                                selectedTextColor = activeColor,
+                                unselectedIconColor = inactiveColor,
+                                unselectedTextColor = inactiveColor,
+                                indicatorColor = if (isDark) Black else Lime.copy(alpha = 0.1f)
                             )
                         )
                     }
@@ -124,7 +135,7 @@ fun AppRoot(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(if (userSettings.isDarkMode) Black else White)
+                .background(if (isDark) Black else White)
         ) {
             AppNavHost(
                 navController = navController,
@@ -164,7 +175,7 @@ private fun AppNavHost(
             )
         }
         composable(Destination.Dashboard.route) {
-            DashboardScreen(strings = strings, isDarkMode = isDark, onNavigate = { dest ->
+            DashboardScreen(strings = strings, isDarkMode = isDark, viewModel = dataViewModel, onNavigate = { dest ->
                 when (dest) {
                     Destination.Activity -> navController.navigate(Destination.Activity.route)
                     Destination.Nutrition -> navController.navigate(Destination.Nutrition.route)
