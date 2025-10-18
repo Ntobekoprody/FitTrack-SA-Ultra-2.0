@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -207,7 +208,7 @@ fun NutritionScreen(
 }
 
 @Composable
-private fun ShortcutCard(
+private fun RowScope.ShortcutCard(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isDarkMode: Boolean,
