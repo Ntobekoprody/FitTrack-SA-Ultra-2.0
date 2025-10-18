@@ -2,6 +2,11 @@
 
 FitTrack SA is a minimalist Android app written in Kotlin/Jetpack Compose that keeps activity and nutrition logs with an offline-first Room database and a dark-mode friendly black/lime palette.
 
+## Prerequisites
+- Android Studio Iguana or newer with the Android Gradle Plugin 8.3+ support
+- JDK 17 (bundled with Android Studio) or JDK 21 when running the Gradle wrapper 8.6
+- Android SDK Platform 34 and Google Maven repository enabled
+
 ## Building the app
 
 ```bash
