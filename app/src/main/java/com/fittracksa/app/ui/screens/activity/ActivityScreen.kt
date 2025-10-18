@@ -23,6 +23,7 @@ import com.fittracksa.app.SharedDataViewModel
 import com.fittracksa.app.ui.AppStrings
 import com.fittracksa.app.ui.screens.common.FitButton
 import com.fittracksa.app.ui.theme.Black
+import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
 
 @Composable
@@ -57,8 +58,13 @@ fun ActivityScreen(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = textColor,
                 unfocusedBorderColor = textColor,
-                textColor = textColor,
-                containerColor = surface
+                focusedLabelColor = textColor,
+                unfocusedLabelColor = textColor.copy(alpha = 0.8f),
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                cursorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -70,8 +76,13 @@ fun ActivityScreen(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = textColor,
                 unfocusedBorderColor = textColor,
-                textColor = textColor,
-                containerColor = surface
+                focusedLabelColor = textColor,
+                unfocusedLabelColor = textColor.copy(alpha = 0.8f),
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                cursorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface
             ),
             modifier = Modifier.fillMaxWidth()
         )

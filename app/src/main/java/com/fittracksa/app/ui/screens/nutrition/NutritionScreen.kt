@@ -68,8 +68,13 @@ fun NutritionScreen(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = textColor,
                 unfocusedBorderColor = textColor,
-                textColor = textColor,
-                containerColor = surface
+                focusedLabelColor = textColor,
+                unfocusedLabelColor = textColor.copy(alpha = 0.8f),
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                cursorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -81,8 +86,13 @@ fun NutritionScreen(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = textColor,
                 unfocusedBorderColor = textColor,
-                textColor = textColor,
-                containerColor = surface
+                focusedLabelColor = textColor,
+                unfocusedLabelColor = textColor.copy(alpha = 0.8f),
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                cursorColor = textColor,
+                focusedContainerColor = surface,
+                unfocusedContainerColor = surface
             ),
             modifier = Modifier.fillMaxWidth()
         )
