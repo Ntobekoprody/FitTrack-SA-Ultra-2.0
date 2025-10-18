@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +37,7 @@ import com.fittracksa.app.ui.theme.Black
 import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NutritionScreen(
     strings: AppStrings,
@@ -70,12 +73,11 @@ fun NutritionScreen(
                 unfocusedBorderColor = textColor,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
-                focusedTextColor = textColor,
-                unfocusedTextColor = textColor,
                 cursorColor = textColor,
                 focusedContainerColor = surface,
                 unfocusedContainerColor = surface
             ),
+            textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -88,12 +90,11 @@ fun NutritionScreen(
                 unfocusedBorderColor = textColor,
                 focusedLabelColor = textColor,
                 unfocusedLabelColor = textColor.copy(alpha = 0.8f),
-                focusedTextColor = textColor,
-                unfocusedTextColor = textColor,
                 cursorColor = textColor,
                 focusedContainerColor = surface,
                 unfocusedContainerColor = surface
             ),
+            textStyle = TextStyle(color = textColor),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
