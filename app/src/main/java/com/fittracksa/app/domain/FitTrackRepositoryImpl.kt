@@ -3,6 +3,7 @@ package com.fittracksa.app.domain
 import com.fittracksa.app.data.local.ActivityDao
 import com.fittracksa.app.data.local.ActivityEntity
 import com.fittracksa.app.data.local.AchievementDao
+import com.fittracksa.app.data.local.AchievementEntity
 import com.fittracksa.app.data.local.MealDao
 import com.fittracksa.app.data.local.MealEntity
 import com.fittracksa.app.data.sync.SyncQueue
