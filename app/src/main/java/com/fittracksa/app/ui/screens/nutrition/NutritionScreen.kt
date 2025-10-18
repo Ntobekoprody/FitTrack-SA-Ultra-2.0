@@ -203,7 +203,12 @@ fun NutritionScreen(
 }
 
 @Composable
-private fun ShortcutCard(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector, isDarkMode: Boolean, onClick: () -> Unit) {
+private fun ShortcutCard(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    isDarkMode: Boolean,
+    onClick: () -> Unit
+) {
     val container = if (isDarkMode) Black else White
     Card(
         modifier = Modifier
