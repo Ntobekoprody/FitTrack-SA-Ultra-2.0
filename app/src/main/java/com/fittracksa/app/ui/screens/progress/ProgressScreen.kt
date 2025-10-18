@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -169,7 +169,13 @@ private fun SegmentedToggle(weekly: Boolean, onToggle: (Boolean) -> Unit, isDark
 }
 
 @Composable
-private fun ToggleChip(label: String, selected: Boolean, activeColor: Color, inactiveColor: Color, onClick: () -> Unit) {
+private fun RowScope.ToggleChip(
+    label: String,
+    selected: Boolean,
+    activeColor: Color,
+    inactiveColor: Color,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .weight(1f)
