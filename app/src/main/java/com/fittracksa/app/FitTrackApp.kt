@@ -16,8 +16,8 @@ class FitTrackApp : Application(), Configuration.Provider {
         SyncScheduler.schedulePeriodicSync(applicationContext)
     }
 
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.INFO)
             .build()
 }
