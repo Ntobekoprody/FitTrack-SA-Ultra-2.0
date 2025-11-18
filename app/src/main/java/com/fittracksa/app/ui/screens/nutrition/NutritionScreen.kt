@@ -2,36 +2,12 @@ package com.fittracksa.app.ui.screens.nutrition
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Fastfood
-import androidx.compose.material.icons.rounded.LocalDining
-import androidx.compose.material.icons.rounded.Restaurant
-import androidx.compose.material.icons.rounded.Schedule
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +21,7 @@ import com.fittracksa.app.ui.screens.common.FitSecondaryButton
 import com.fittracksa.app.ui.theme.Black
 import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
+import androidx.compose.foundation.shape.RoundedCornerShape
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -68,7 +45,8 @@ fun NutritionScreen(
         focusedContainerColor = cardColor,
         unfocusedContainerColor = cardColor,
         focusedIndicatorColor = Lime,
-        unfocusedIndicatorColor = if (isDarkMode) Lime.copy(alpha = 0.4f) else Black.copy(alpha = 0.1f),
+        unfocusedIndicatorColor =
+            if (isDarkMode) Lime.copy(alpha = 0.4f) else Black.copy(alpha = 0.1f),
         focusedTextColor = textColor,
         unfocusedTextColor = textColor,
         focusedLabelColor = textColor,
@@ -85,21 +63,30 @@ fun NutritionScreen(
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+
         item {
-            Text(strings.nutrition, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = textColor)
+            Text(
+                strings.nutrition,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = textColor
+            )
         }
 
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(text = "Today's Intake", fontWeight = FontWeight.Medium, color = textColor.copy(alpha = 0.7f))
-                    Text(text = todayIntake.formatCalories(), fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Lime)
-                    Text(text = "Goal 2,000 cal", color = textColor.copy(alpha = 0.7f))
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(strings.todaysIntake, fontWeight = FontWeight.Medium, color = textColor.copy(alpha = 0.7f))
+                    Text(todayIntake.formatCalories(), fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Lime)
+                    Text(strings.dailyGoal, color = textColor.copy(alpha = 0.7f))
                 }
             }
         }
@@ -107,23 +94,29 @@ fun NutritionScreen(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Icon(imageVector = Icons.Rounded.Fastfood, contentDescription = null, tint = Lime)
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(Icons.Rounded.Fastfood, contentDescription = null, tint = Lime)
                         Column {
-                            Text(text = strings.logMeal, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
-                            Text(text = "Track your nutrition", color = textColor.copy(alpha = 0.7f), fontSize = 14.sp)
+                            Text(strings.logMeal, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
+                            Text(strings.trackNutrition, color = textColor.copy(alpha = 0.7f), fontSize = 14.sp)
                         }
                     }
 
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("Food name") },
+                        label = { Text(strings.foodName) },
                         colors = fieldColors,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -131,13 +124,18 @@ fun NutritionScreen(
                     OutlinedTextField(
                         value = calories,
                         onValueChange = { value -> calories = value.filter { it.isDigit() } },
-                        label = { Text("Calories") },
-                        leadingIcon = { Icon(Icons.Rounded.Schedule, contentDescription = null, tint = Lime) },
+                        label = { Text(strings.calories) },
+                        leadingIcon = {
+                            Icon(Icons.Rounded.Schedule, contentDescription = null, tint = Lime)
+                        },
                         colors = fieldColors,
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         FitPrimaryButton(
                             label = strings.saveMeal,
                             leadingIcon = Icons.Rounded.Check,
@@ -161,7 +159,7 @@ fun NutritionScreen(
                     }
 
                     Text(
-                        text = "Saves to local device · Auto-syncs when online",
+                        text = strings.manageData,
                         color = textColor.copy(alpha = 0.7f),
                         fontSize = 12.sp
                     )
@@ -171,12 +169,12 @@ fun NutritionScreen(
 
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                ShortcutCard(title = "Breakfast", icon = Icons.Rounded.Restaurant, isDarkMode = isDarkMode) {
-                    description = "Breakfast"
+                ShortcutCard(title = strings.breakfast, icon = Icons.Rounded.Restaurant, isDarkMode = isDarkMode) {
+                    description = strings.breakfast
                     calories = "450"
                 }
-                ShortcutCard(title = "Lunch", icon = Icons.Rounded.LocalDining, isDarkMode = isDarkMode) {
-                    description = "Lunch"
+                ShortcutCard(title = strings.lunch, icon = Icons.Rounded.LocalDining, isDarkMode = isDarkMode) {
+                    description = strings.lunch
                     calories = "600"
                 }
             }
@@ -185,20 +183,26 @@ fun NutritionScreen(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(text = "Recent Meals", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(strings.recentMeals, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
                     if (meals.isEmpty()) {
-                        Text(text = "Capture your meals to monitor calories.", color = textColor.copy(alpha = 0.7f))
+                        Text(strings.noMealsYet, color = textColor.copy(alpha = 0.7f))
                     } else {
                         val formatter = DateTimeFormatter.ofPattern("h:mm a")
                         meals.take(6).forEach { meal ->
-                            MealRow(meal = meal, formatter = formatter, isDarkMode = isDarkMode, onDelete = {
-                                viewModel.deleteMeal(meal)
-                            })
+                            MealRow(
+                                meal = meal,
+                                formatter = formatter,
+                                isDarkMode = isDarkMode,
+                                onDelete = { viewModel.deleteMeal(meal) }
+                            )
                         }
                     }
                 }
@@ -219,7 +223,7 @@ private fun RowScope.ShortcutCard(
         modifier = Modifier
             .weight(1f)
             .clickable(onClick = onClick),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = container),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -235,10 +239,16 @@ private fun RowScope.ShortcutCard(
 }
 
 @Composable
-private fun MealRow(meal: MealEntity, formatter: DateTimeFormatter, isDarkMode: Boolean, onDelete: () -> Unit) {
+private fun MealRow(
+    meal: MealEntity,
+    formatter: DateTimeFormatter,
+    isDarkMode: Boolean,
+    onDelete: () -> Unit
+) {
     val textColor = if (isDarkMode) Lime else Black
     val zone = ZoneId.systemDefault()
     val timestamp = meal.timestamp.atZone(zone)
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -251,7 +261,7 @@ private fun MealRow(meal: MealEntity, formatter: DateTimeFormatter, isDarkMode: 
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(formatter.format(timestamp), color = textColor.copy(alpha = 0.7f), fontSize = 12.sp)
             IconButton(onClick = onDelete) {
-                Icon(imageVector = Icons.Rounded.Close, contentDescription = "Delete", tint = textColor)
+                Icon(Icons.Rounded.Close, contentDescription = "Delete", tint = textColor)
             }
         }
     }
@@ -260,7 +270,8 @@ private fun MealRow(meal: MealEntity, formatter: DateTimeFormatter, isDarkMode: 
 private fun List<MealEntity>.filterTodayCalories(): Int {
     val zone = ZoneId.systemDefault()
     val today = LocalDate.now(zone)
-    return filter { it.timestamp.atZone(zone).toLocalDate() == today }.sumOf { it.calories }
+    return this.filter { it.timestamp.atZone(zone).toLocalDate() == today }.sumOf { it.calories }
 }
 
-private fun Int.formatCalories(): String = String.format("%,d", this)
+private fun Int.formatCalories(): String =
+    String.format("%,d", this)

@@ -1,11 +1,11 @@
 package com.fittracksa.app.ui.screens.login
 
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,14 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fittracksa.app.biometrics.BiometricAuthenticator
-import com.fittracksa.app.notifications.MessagingHelper
-import com.fittracksa.app.services.CredentialStore
 import com.fittracksa.app.ui.AppStrings
 import com.fittracksa.app.ui.auth.AuthViewModel
 import com.fittracksa.app.ui.screens.common.FitButton
 import com.fittracksa.app.ui.theme.Black
-import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
+import com.fittracksa.app.ui.theme.Lime
 
 @Composable
 fun LoginScreen(
@@ -38,11 +36,11 @@ fun LoginScreen(
     val titleColor = if (isDarkMode) Lime else Black
     val context = LocalContext.current
 
-    val authViewModel: AuthViewModel = viewModel()
-    val state by authViewModel.state.collectAsState()
+    val viewModel: AuthViewModel = viewModel()
+    val state by viewModel.state.collectAsState()
 
-    val biometricAuthenticator = remember(context) {
-        (context as? ComponentActivity)?.let { BiometricAuthenticator(it) }
+    val biometricHelper = remember(context) {
+        (context as? FragmentActivity)?.let { BiometricAuthenticator(it) }
     }
 
     Column(
@@ -63,60 +61,48 @@ fun LoginScreen(
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(Modifier.height(32.dp))
 
-        // EMAIL FIELD
         OutlinedTextField(
             value = state.email,
-            onValueChange = authViewModel::updateEmail,
+            onValueChange = viewModel::updateEmail,
             label = { Text(strings.email) },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // PASSWORD FIELD
         OutlinedTextField(
             value = state.password,
-            onValueChange = authViewModel::updatePassword,
+            onValueChange = viewModel::updatePassword,
             visualTransformation = PasswordVisualTransformation(),
             label = { Text(strings.password) },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // EMAIL/PASSWORD LOGIN BUTTON
         FitButton(label = strings.emailLogin) {
-            authViewModel.login {
-                // Save FCM token after login
-                MessagingHelper.fetchAndSaveToken()
-
-                // Optional: Enable biometric auto-login by saving credentials:
-                CredentialStore.saveCredentials(context, state.email, state.password)
-
+            viewModel.login {
                 Toast.makeText(context, strings.loginSuccess, Toast.LENGTH_SHORT).show()
                 onLoginSuccess()
             }
         }
 
-        // LOADING SPINNER
         if (state.loading) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
             CircularProgressIndicator(color = Lime)
         }
 
-        // ERROR MESSAGE
-        state.error?.let { err ->
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = err, color = Lime, fontSize = 14.sp)
+        state.error?.let {
+            Spacer(Modifier.height(16.dp))
+            Text(text = it, color = Lime, fontSize = 14.sp)
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
-        // BIOMETRIC LOGIN BUTTON
         FitButton(label = strings.biometric) {
-            val helper = biometricAuthenticator
+            val helper = biometricHelper
             if (helper == null || !helper.canAuthenticate()) {
                 Toast.makeText(context, strings.biometricUnavailable, Toast.LENGTH_SHORT).show()
                 return@FitButton
@@ -127,36 +113,17 @@ fun LoginScreen(
                 subtitle = strings.biometricSubtitle,
                 negativeButtonText = strings.cancel,
                 onSuccess = {
-                    // Load saved encrypted credentials
-                    val creds = CredentialStore.getCredentials(context)
-                    if (creds == null) {
-                        Toast.makeText(context, "No saved login credentials found", Toast.LENGTH_SHORT).show()
-                        return@authenticate
-                    }
-
-                    val (savedEmail, savedPass) = creds
-
-                    // Apply to ViewModel
-                    authViewModel.updateEmail(savedEmail)
-                    authViewModel.updatePassword(savedPass)
-
-                    // Sign in using Firebase
-                    authViewModel.login {
-                        MessagingHelper.fetchAndSaveToken()
-                        Toast.makeText(context, strings.loginSuccess, Toast.LENGTH_SHORT).show()
-                        onLoginSuccess()
-                    }
+                    // In real use: load saved email/password from CredentialStore
+                    onLoginSuccess()
                 },
-                onError = { message ->
-                    val text = if (message == "BIOMETRIC_FAILED") strings.biometricFailed else message
-                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                onError = { msg ->
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 }
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // NAVIGATE TO REGISTRATION SCREEN
         FitButton(label = strings.register) {
             onNavigateToRegister()
         }

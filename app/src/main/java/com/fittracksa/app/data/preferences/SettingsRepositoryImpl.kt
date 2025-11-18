@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.remove
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -19,6 +18,7 @@ import java.io.File
 private const val DATASTORE_NAME = "fittrack_settings"
 
 class SettingsRepositoryImpl(private val context: Context) : SettingsRepository {
+
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
         scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     ) {
@@ -48,8 +48,7 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
 
     override suspend fun toggleDarkMode() {
         dataStore.edit { prefs ->
-            val current = prefs[Keys.DARK_MODE] ?: true
-            prefs[Keys.DARK_MODE] = !current
+            prefs[Keys.DARK_MODE] = !(prefs[Keys.DARK_MODE] ?: true)
         }
     }
 
@@ -67,15 +66,14 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
 
     override suspend fun setDisplayName(name: String) {
         dataStore.edit { prefs ->
-            val value = name.ifBlank { UserSettings.DEFAULT_DISPLAY_NAME }
-            prefs[Keys.DISPLAY_NAME] = value
+            prefs[Keys.DISPLAY_NAME] = name.ifBlank { UserSettings.DEFAULT_DISPLAY_NAME }
         }
     }
 
     override suspend fun setProfileImage(uri: String?) {
         dataStore.edit { prefs ->
             if (uri.isNullOrBlank()) {
-                prefs.remove(Keys.PROFILE_IMAGE)
+                prefs.remove(Keys.PROFILE_IMAGE)   // ← Correct removal
             } else {
                 prefs[Keys.PROFILE_IMAGE] = uri
             }

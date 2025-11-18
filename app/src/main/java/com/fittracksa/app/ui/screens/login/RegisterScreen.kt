@@ -16,14 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fittracksa.app.notifications.MessagingHelper
-import com.fittracksa.app.services.CredentialStore
 import com.fittracksa.app.ui.AppStrings
 import com.fittracksa.app.ui.auth.AuthViewModel
 import com.fittracksa.app.ui.screens.common.FitButton
 import com.fittracksa.app.ui.theme.Black
-import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
+import com.fittracksa.app.ui.theme.Lime
 
 @Composable
 fun RegisterScreen(
@@ -33,7 +31,7 @@ fun RegisterScreen(
     onBackToLogin: () -> Unit
 ) {
     val surface = if (isDarkMode) Black else White
-    val titleColor = if (isDarkMode) Lime else androidx.compose.ui.graphics.Color.Black
+    val titleColor = if (isDarkMode) Lime else Black
     val context = LocalContext.current
 
     val viewModel: AuthViewModel = viewModel()
@@ -44,8 +42,8 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(surface)
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Text(
@@ -53,11 +51,10 @@ fun RegisterScreen(
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = titleColor,
-            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(Modifier.height(32.dp))
 
         OutlinedTextField(
             value = state.displayName,
@@ -66,7 +63,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = state.email,
@@ -75,7 +72,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = state.password,
@@ -85,32 +82,26 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         FitButton(label = strings.register) {
             viewModel.register {
-                // Save secure credentials for biometric login
-                CredentialStore.saveCredentials(context, state.email, state.password)
-
-                // Save FCM token for this user
-                MessagingHelper.fetchAndSaveToken()
-
                 Toast.makeText(context, strings.registerSuccess, Toast.LENGTH_SHORT).show()
                 onRegisterSuccess()
             }
         }
 
         if (state.loading) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
             CircularProgressIndicator(color = Lime)
         }
 
-        state.error?.let { err ->
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = err, color = Lime, fontSize = 14.sp)
+        state.error?.let {
+            Spacer(Modifier.height(16.dp))
+            Text(text = it, color = Lime)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         FitButton(label = strings.backToLogin) {
             onBackToLogin()

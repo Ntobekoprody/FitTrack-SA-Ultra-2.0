@@ -1,31 +1,14 @@
 package com.fittracksa.app.ui.screens.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.FitnessCenter
-import androidx.compose.material.icons.rounded.LocalFireDepartment
-import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material.icons.rounded.Timer
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +25,7 @@ import com.fittracksa.app.ui.screens.common.FitSecondaryButton
 import com.fittracksa.app.ui.theme.Black
 import com.fittracksa.app.ui.theme.Lime
 import com.fittracksa.app.ui.theme.White
+import androidx.compose.foundation.shape.RoundedCornerShape
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -73,6 +57,10 @@ fun DashboardScreen(
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+
+        // --------------------------------------------------------------
+        // Header Title
+        // --------------------------------------------------------------
         item {
             Text(
                 text = strings.dashboard,
@@ -82,22 +70,28 @@ fun DashboardScreen(
             )
         }
 
+        // --------------------------------------------------------------
+        // Statistics Row
+        // --------------------------------------------------------------
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 DashboardStatCard(
-                    title = "Day Streak",
+                    title = strings.dayStreak,
                     value = streak.toString(),
                     icon = Icons.Rounded.Timer,
                     isDark = isDarkMode
                 )
                 DashboardStatCard(
-                    title = "Min Active",
+                    title = strings.minActive,
                     value = activeMinutes.toString(),
                     icon = Icons.Rounded.FitnessCenter,
                     isDark = isDarkMode
                 )
                 DashboardStatCard(
-                    title = "Calories",
+                    title = strings.calories,
                     value = formatCalories(dailyCalories),
                     icon = Icons.Rounded.LocalFireDepartment,
                     isDark = isDarkMode
@@ -105,47 +99,74 @@ fun DashboardScreen(
             }
         }
 
+        // --------------------------------------------------------------
+        // Quick Actions
+        // --------------------------------------------------------------
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = if (isDarkMode) Black else White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = background),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(text = "Quick Actions", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    Text(
+                        text = strings.quickActions,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = textColor
+                    )
+
                     FitPrimaryButton(
                         label = strings.logActivity,
                         leadingIcon = Icons.Rounded.FitnessCenter
                     ) { onNavigate(Destination.Activity) }
+
                     FitPrimaryButton(
                         label = strings.logMeal,
-                        leadingIcon = Icons.Rounded.LocalFireDepartment
+                        leadingIcon = Icons.Rounded.Fastfood
                     ) { onNavigate(Destination.Nutrition) }
                 }
             }
         }
 
+        // --------------------------------------------------------------
+        // Recent Achievements
+        // --------------------------------------------------------------
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = if (isDarkMode) Black else White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = background),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(text = "Recent Achievements", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    Text(
+                        text = strings.recentAchievements,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = textColor
+                    )
+
                     if (achievements.isEmpty()) {
                         Text(
-                            text = "Keep logging to unlock your next badge.",
-                            color = textColor,
-                            style = MaterialTheme.typography.bodyMedium
+                            text = strings.noAchievementsYet,
+                            color = textColor
                         )
                     } else {
-                        achievements.take(3).forEach { achievement ->
-                            AchievementRow(achievement = achievement, isDarkMode = isDarkMode)
+                        achievements.take(3).forEach {
+                            AchievementRow(it, isDarkMode)
                         }
                     }
+
                     FitSecondaryButton(
                         label = strings.viewStreaks,
                         leadingIcon = Icons.Rounded.Star
@@ -154,6 +175,9 @@ fun DashboardScreen(
             }
         }
 
+        // --------------------------------------------------------------
+        // Sync Now Button
+        // --------------------------------------------------------------
         item {
             FitSecondaryButton(
                 label = strings.refresh,
@@ -163,15 +187,25 @@ fun DashboardScreen(
     }
 }
 
+/* ============================================================================
+   Reusable Components
+   ============================================================================ */
+
 @Composable
-private fun RowScope.DashboardStatCard(title: String, value: String, icon: ImageVector, isDark: Boolean) {
-    val container = if (isDark) Black else White
+private fun RowScope.DashboardStatCard(
+    title: String,
+    value: String,
+    icon: ImageVector,
+    isDark: Boolean
+) {
+    val cardColor = if (isDark) Black else White
     val textColor = if (isDark) Lime else Black
+
     Card(
         modifier = Modifier.weight(1f),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = container),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(cardColor),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -179,24 +213,29 @@ private fun RowScope.DashboardStatCard(title: String, value: String, icon: Image
             horizontalAlignment = Alignment.Start
         ) {
             Icon(icon, contentDescription = null, tint = Lime)
-            Text(text = value, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Lime)
-            Text(text = title, color = textColor, fontSize = 14.sp)
+            Text(value, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Lime)
+            Text(title, color = textColor, fontSize = 14.sp)
         }
     }
 }
 
 @Composable
-private fun AchievementRow(achievement: AchievementEntity, isDarkMode: Boolean) {
+private fun AchievementRow(
+    achievement: AchievementEntity,
+    isDarkMode: Boolean
+) {
     val textColor = if (isDarkMode) Lime else Black
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = if (isDarkMode) Black else Lime.copy(alpha = 0.2f)),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-            modifier = Modifier.height(40.dp)
+            colors = CardDefaults.cardColors(
+                containerColor = if (isDarkMode) Black else Lime.copy(alpha = 0.18f)
+            ),
+            shape = RoundedCornerShape(14.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Star,
@@ -205,18 +244,23 @@ private fun AchievementRow(achievement: AchievementEntity, isDarkMode: Boolean) 
                 modifier = Modifier.padding(8.dp)
             )
         }
+
         Column(Modifier.weight(1f)) {
-            Text(text = achievement.badgeName, fontWeight = FontWeight.SemiBold, color = textColor)
+            Text(achievement.badgeName, fontWeight = FontWeight.SemiBold, color = textColor)
             Text(
-                text = achievement.description,
-                color = textColor,
+                achievement.description,
+                color = textColor.copy(alpha = 0.8f),
                 style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
             )
         }
     }
 }
+
+/* ============================================================================
+   Helper Logic
+   ============================================================================ */
 
 private fun currentStreak(activities: List<ActivityEntity>): Int {
     if (activities.isEmpty()) return 0
@@ -242,6 +286,7 @@ private fun todayCalories(meals: List<MealEntity>): Int {
     return meals.filter { it.timestamp.atZone(zone).toLocalDate() == today }.sumOf { it.calories }
 }
 
-private fun formatCalories(calories: Int): String {
-    return if (calories >= 1000) String.format("%.1fk", calories / 1000f) else calories.toString()
+private fun formatCalories(value: Int): String {
+    return if (value >= 1000) String.format("%.1fk", value / 1000f)
+    else value.toString()
 }
