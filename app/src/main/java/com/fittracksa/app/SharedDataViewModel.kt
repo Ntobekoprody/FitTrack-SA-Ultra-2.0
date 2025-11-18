@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fittracksa.app.data.AppContainer
 import com.fittracksa.app.data.local.MealEntity
 import com.fittracksa.app.domain.FitTrackRepository
+import com.fittracksa.app.notifications.FitTrackNotifier
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SharedDataViewModel(
-    private val repository: FitTrackRepository
+    private val repository: FitTrackRepository,
+    private val notifier: FitTrackNotifier
 ) : ViewModel() {
 
     val activities = repository.activities
@@ -32,6 +34,7 @@ class SharedDataViewModel(
         viewModelScope.launch {
             try {
                 repository.logActivity(type, duration)
+                notifier.post(FitTrackNotifier.Event.ActivitySaved(type, duration))
                 _events.emit(UiEvent.Success("Activity stored offline and queued for sync"))
             } catch (e: Exception) {
                 _events.emit(UiEvent.Error("Failed to log activity"))
@@ -43,6 +46,7 @@ class SharedDataViewModel(
         viewModelScope.launch {
             try {
                 repository.logMeal(description, calories)
+                notifier.post(FitTrackNotifier.Event.MealSaved(description, calories))
                 _events.emit(UiEvent.Success("Meal stored offline and queued for sync"))
             } catch (e: Exception) {
                 _events.emit(UiEvent.Error("Failed to log meal"))
@@ -104,8 +108,9 @@ class SharedDataViewModel(
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     val repo = container.repository
+                    val notifier = container.notifier
                     @Suppress("UNCHECKED_CAST")
-                    return SharedDataViewModel(repo) as T
+                    return SharedDataViewModel(repo, notifier) as T
                 }
             }
     }

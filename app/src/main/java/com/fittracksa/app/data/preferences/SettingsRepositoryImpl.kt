@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.remove
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private const val DATASTORE_NAME = "fittrack_settings"
@@ -69,5 +70,10 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
                 prefs[Keys.PROFILE_IMAGE] = uri
             }
         }
+    }
+
+    override suspend fun areNotificationsEnabled(): Boolean {
+        val prefs = context.dataStore.data.first()
+        return prefs[Keys.NOTIFICATIONS] ?: true
     }
 }

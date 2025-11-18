@@ -9,4 +9,5 @@ interface SettingsRepository {
     suspend fun setNotifications(enabled: Boolean)
     suspend fun setDisplayName(name: String)
     suspend fun setProfileImage(uri: String?)
+    suspend fun areNotificationsEnabled(): Boolean
 }

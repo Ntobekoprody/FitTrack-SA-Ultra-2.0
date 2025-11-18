@@ -9,6 +9,7 @@ import com.fittracksa.app.data.preferences.SettingsRepositoryImpl
 import com.fittracksa.app.data.sync.SyncQueue
 import com.fittracksa.app.domain.FitTrackRepository
 import com.fittracksa.app.domain.FitTrackRepositoryImpl
+import com.fittracksa.app.notifications.FitTrackNotifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +35,10 @@ class DefaultAppContainer(context: Context) : AppContainer {
         }
     }
 
+    private val settingsRepo: SettingsRepository by lazy {
+        SettingsRepositoryImpl(context)
+    }
+
     override val repository: FitTrackRepository by lazy {
         FitTrackRepositoryImpl(
             activityDao = database.activityDao(),
@@ -43,7 +48,10 @@ class DefaultAppContainer(context: Context) : AppContainer {
         )
     }
 
-    override val settingsRepository: SettingsRepository by lazy {
-        SettingsRepositoryImpl(context)
+    override val settingsRepository: SettingsRepository
+        get() = settingsRepo
+
+    override val notifier: FitTrackNotifier by lazy {
+        FitTrackNotifier(context, settingsRepo)
     }
 }

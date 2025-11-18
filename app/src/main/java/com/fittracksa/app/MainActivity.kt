@@ -29,7 +29,8 @@ class MainActivity : ComponentActivity() {
                 AppRoot(
                     dataViewModel = dataViewModel,
                     settingsViewModel = settingsViewModel,
-                    userSettings = settingsState
+                    userSettings = settingsState,
+                    notifier = appContainer.notifier
                 )
             }
         }

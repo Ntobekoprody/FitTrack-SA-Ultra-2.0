@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.fittracksa.app.SettingsViewModel
 import com.fittracksa.app.SharedDataViewModel
 import com.fittracksa.app.data.preferences.UserSettings
+import com.fittracksa.app.notifications.FitTrackNotifier
 import com.fittracksa.app.ui.screens.activity.ActivityScreen
 import com.fittracksa.app.ui.screens.achievements.AchievementsScreen
 import com.fittracksa.app.ui.screens.dashboard.DashboardScreen
@@ -62,7 +63,8 @@ data class BottomItem(
 fun AppRoot(
     dataViewModel: SharedDataViewModel,
     settingsViewModel: SettingsViewModel,
-    userSettings: UserSettings
+    userSettings: UserSettings,
+    notifier: FitTrackNotifier
 ) {
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -144,7 +146,8 @@ fun AppRoot(
                 dataViewModel = dataViewModel,
                 settingsViewModel = settingsViewModel,
                 userSettings = userSettings,
-                strings = strings
+                strings = strings,
+                notifier = notifier
             )
         }
     }
@@ -157,7 +160,8 @@ private fun AppNavHost(
     dataViewModel: SharedDataViewModel,
     settingsViewModel: SettingsViewModel,
     userSettings: UserSettings,
-    strings: AppStrings
+    strings: AppStrings,
+    notifier: FitTrackNotifier
 ) {
     val isDark = userSettings.isDarkMode
 
@@ -170,9 +174,12 @@ private fun AppNavHost(
             LoginScreen(
                 strings = strings,
                 isDarkMode = isDark,
-                onLoginSuccess = { navController.navigate(Destination.Dashboard.route) {
-                    popUpTo(Destination.Login.route) { inclusive = true }
-                } }
+                onLoginSuccess = {
+                    notifier.post(FitTrackNotifier.Event.LoggedIn(userSettings.displayName))
+                    navController.navigate(Destination.Dashboard.route) {
+                        popUpTo(Destination.Login.route) { inclusive = true }
+                    }
+                }
             )
         }
         composable(Destination.Dashboard.route) {
@@ -207,6 +214,7 @@ private fun AppNavHost(
                 isDarkMode = isDark,
                 settingsViewModel = settingsViewModel,
                 onSignOut = {
+                    notifier.post(FitTrackNotifier.Event.SignedOut(userSettings.displayName))
                     navController.navigate(Destination.Login.route) {
                         popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                     }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FitTrack SA</string>
+    <string name="notification_channel_name">FitTrack Live Alerts</string>
+    <string name="notification_channel_description">Activity, meal, and account updates</string>
 </resources>
