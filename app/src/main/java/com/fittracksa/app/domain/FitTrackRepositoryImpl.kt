@@ -1,5 +1,6 @@
 package com.fittracksa.app.domain
 
+import com.fittracksa.app.data.cloud.FirebaseSyncDataSource
 import com.fittracksa.app.data.local.ActivityDao
 import com.fittracksa.app.data.local.ActivityEntity
 import com.fittracksa.app.data.local.AchievementDao
@@ -16,7 +17,8 @@ class FitTrackRepositoryImpl(
     private val activityDao: ActivityDao,
     private val mealDao: MealDao,
     private val achievementDao: AchievementDao,
-    private val syncQueue: SyncQueue
+    private val syncQueue: SyncQueue,
+    private val cloudSync: FirebaseSyncDataSource
 ) : FitTrackRepository {
 
     override val activities: Flow<List<ActivityEntity>> = activityDao.observeActivities()
@@ -24,37 +26,36 @@ class FitTrackRepositoryImpl(
     override val achievements: Flow<List<AchievementEntity>> = achievementDao.observeAchievements()
 
     override suspend fun logActivity(type: String, durationMinutes: Int) {
-        syncQueue.enqueueActivity {
-            insert(
-                ActivityEntity(
-                    type = type,
-                    durationMinutes = durationMinutes,
-                    timestamp = Instant.now(),
-                    isSynced = false
-                )
-            )
-        }
+        val entity = ActivityEntity(
+            type = type,
+            durationMinutes = durationMinutes,
+            timestamp = Instant.now(),
+            isSynced = false
+        )
+        syncQueue.enqueueActivity { insert(entity) }
+        cloudSync.upsertActivity(entity)
     }
 
     override suspend fun logMeal(description: String, calories: Int) {
-        syncQueue.enqueueMeal {
-            insert(
-                MealEntity(
-                    description = description,
-                    calories = calories,
-                    timestamp = Instant.now(),
-                    isSynced = false
-                )
-            )
-        }
+        val entity = MealEntity(
+            description = description,
+            calories = calories,
+            timestamp = Instant.now(),
+            isSynced = false
+        )
+        syncQueue.enqueueMeal { insert(entity) }
+        cloudSync.upsertMeal(entity)
     }
 
     override suspend fun updateMeal(meal: MealEntity) {
-        syncQueue.enqueueMeal { update(meal.copy(isSynced = false)) }
+        val updated = meal.copy(isSynced = false)
+        syncQueue.enqueueMeal { update(updated) }
+        cloudSync.upsertMeal(updated)
     }
 
     override suspend fun deleteMeal(meal: MealEntity) {
         syncQueue.enqueueMeal { delete(meal) }
+        cloudSync.deleteMeal(meal)
     }
 
     override suspend fun joinChallenge(id: Long) {
@@ -68,7 +69,9 @@ class FitTrackRepositoryImpl(
         withContext(Dispatchers.IO) {
             val pendingActivities = activityDao.getPendingActivities()
             val pendingMeals = mealDao.getPendingMeals()
-
+            if (pendingActivities.isNotEmpty() || pendingMeals.isNotEmpty()) {
+                cloudSync.syncPending(pendingActivities, pendingMeals)
+            }
             if (pendingActivities.isNotEmpty()) {
                 activityDao.markSynced(pendingActivities.map(ActivityEntity::id), true)
             }

@@ -10,6 +10,13 @@ FitTrack SA is a minimalist Android app written in Kotlin/Jetpack Compose that k
 - Android Studio Jellyfish (2023.3.1) or newer with Android Gradle Plugin 8.4+ support
 - JetBrains Runtime 21.0.6 (or any JDK 21) configured as the Gradle JDK; Gradle can auto-provision if unavailable
 - Android SDK Platform 34 and Google Maven repository enabled
+- Firebase project (the repo ships placeholder `google-services.json`; replace the API key/app id with values from your console)
+
+### Firebase Cloud Sync
+- The app boots Firebase automatically and mirrors every activity/meal log to
+  `users/{email}/{activities|meals}` in Cloud Firestore.
+- Update `app/google-services.json` with the `google-services.json` download from your Firebase project so analytics + Firestore can authenticate against your credentials.
+- If you prefer a different user identifier, adjust `FirebaseSyncDataSource.resolveUserId()` to match your auth scheme.
 
 ## Building the app
 

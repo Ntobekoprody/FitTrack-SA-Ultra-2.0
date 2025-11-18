@@ -2,6 +2,7 @@ package com.fittracksa.app.data
 
 import android.content.Context
 import androidx.room.Room
+import com.fittracksa.app.data.cloud.FirebaseSyncDataSource
 import com.fittracksa.app.data.local.AchievementEntity
 import com.fittracksa.app.data.local.FitTrackDatabase
 import com.fittracksa.app.data.preferences.SettingsRepository
@@ -10,6 +11,8 @@ import com.fittracksa.app.data.sync.SyncQueue
 import com.fittracksa.app.domain.FitTrackRepository
 import com.fittracksa.app.domain.FitTrackRepositoryImpl
 import com.fittracksa.app.notifications.FitTrackNotifier
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,12 +42,20 @@ class DefaultAppContainer(context: Context) : AppContainer {
         SettingsRepositoryImpl(context)
     }
 
+    private val cloudSync by lazy {
+        FirebaseSyncDataSource(
+            firestore = Firebase.firestore,
+            settingsRepository = settingsRepo
+        )
+    }
+
     override val repository: FitTrackRepository by lazy {
         FitTrackRepositoryImpl(
             activityDao = database.activityDao(),
             mealDao = database.mealDao(),
             achievementDao = database.achievementDao(),
-            syncQueue = syncQueue
+            syncQueue = syncQueue,
+            cloudSync = cloudSync
         )
     }
 
