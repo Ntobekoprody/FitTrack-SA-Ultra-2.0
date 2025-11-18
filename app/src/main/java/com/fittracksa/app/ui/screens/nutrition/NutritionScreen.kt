@@ -3,14 +3,14 @@ package com.fittracksa.app.ui.screens.nutrition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -138,26 +138,29 @@ fun NutritionScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                        FitPrimaryButton(
-                            label = strings.saveMeal,
-                            leadingIcon = Icons.Rounded.Check,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            val kcal = calories.toIntOrNull() ?: 0
-                            if (description.isNotBlank() && kcal > 0) {
-                                viewModel.logMeal(description, kcal)
+                    BoxWithConstraints {
+                        val buttonWidth = (maxWidth - 12.dp) / 2
+                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+                            FitPrimaryButton(
+                                label = strings.saveMeal,
+                                leadingIcon = Icons.Rounded.Check,
+                                modifier = Modifier.width(buttonWidth)
+                            ) {
+                                val kcal = calories.toIntOrNull() ?: 0
+                                if (description.isNotBlank() && kcal > 0) {
+                                    viewModel.logMeal(description, kcal)
+                                    description = ""
+                                    calories = ""
+                                }
+                            }
+                            FitSecondaryButton(
+                                label = strings.cancel,
+                                leadingIcon = Icons.Rounded.Close,
+                                modifier = Modifier.width(buttonWidth)
+                            ) {
                                 description = ""
                                 calories = ""
                             }
-                        }
-                        FitSecondaryButton(
-                            label = strings.cancel,
-                            leadingIcon = Icons.Rounded.Close,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            description = ""
-                            calories = ""
                         }
                     }
 
@@ -171,14 +174,27 @@ fun NutritionScreen(
         }
 
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                ShortcutCard(title = "Breakfast", icon = Icons.Rounded.Restaurant, isDarkMode = isDarkMode) {
-                    description = "Breakfast"
-                    calories = "450"
-                }
-                ShortcutCard(title = "Lunch", icon = Icons.Rounded.LocalDining, isDarkMode = isDarkMode) {
-                    description = "Lunch"
-                    calories = "600"
+            BoxWithConstraints {
+                val cardWidth = (maxWidth - 12.dp) / 2
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+                    ShortcutCard(
+                        title = "Breakfast",
+                        icon = Icons.Rounded.Restaurant,
+                        isDarkMode = isDarkMode,
+                        modifier = Modifier.width(cardWidth)
+                    ) {
+                        description = "Breakfast"
+                        calories = "450"
+                    }
+                    ShortcutCard(
+                        title = "Lunch",
+                        icon = Icons.Rounded.LocalDining,
+                        isDarkMode = isDarkMode,
+                        modifier = Modifier.width(cardWidth)
+                    ) {
+                        description = "Lunch"
+                        calories = "600"
+                    }
                 }
             }
         }
@@ -209,16 +225,16 @@ fun NutritionScreen(
 }
 
 @Composable
-private fun RowScope.ShortcutCard(
+private fun ShortcutCard(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isDarkMode: Boolean,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     val container = if (isDarkMode) Black else White
     Card(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .clickable(onClick = onClick),
         shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = container),
@@ -245,7 +261,7 @@ private fun MealRow(meal: MealEntity, formatter: DateTimeFormatter, isDarkMode: 
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.padding(end = 12.dp)) {
             Text(meal.description, fontWeight = FontWeight.SemiBold, color = textColor)
             Text("${meal.calories} cal", color = textColor.copy(alpha = 0.7f), fontSize = 14.sp)
         }

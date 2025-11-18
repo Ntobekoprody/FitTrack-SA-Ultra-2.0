@@ -5,14 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -156,30 +155,47 @@ private fun SegmentedToggle(weekly: Boolean, onToggle: (Boolean) -> Unit, isDark
     val background = if (isDarkMode) Black else White
     val activeColor = Lime
     val inactiveColor = if (isDarkMode) Lime.copy(alpha = 0.4f) else Black.copy(alpha = 0.4f)
-    Row(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
             .clip(androidx.compose.foundation.shape.RoundedCornerShape(30.dp))
             .background(background)
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(4.dp)
     ) {
-        ToggleChip(label = "Weekly", selected = weekly, activeColor = activeColor, inactiveColor = inactiveColor) { onToggle(true) }
-        ToggleChip(label = "Monthly", selected = !weekly, activeColor = activeColor, inactiveColor = inactiveColor) { onToggle(false) }
+        val chipWidth = (maxWidth - 8.dp) / 2
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ToggleChip(
+                label = "Weekly",
+                selected = weekly,
+                activeColor = activeColor,
+                inactiveColor = inactiveColor,
+                modifier = Modifier.width(chipWidth)
+            ) { onToggle(true) }
+            ToggleChip(
+                label = "Monthly",
+                selected = !weekly,
+                activeColor = activeColor,
+                inactiveColor = inactiveColor,
+                modifier = Modifier.width(chipWidth)
+            ) { onToggle(false) }
+        }
     }
 }
 
 @Composable
-private fun RowScope.ToggleChip(
+private fun ToggleChip(
     label: String,
     selected: Boolean,
     activeColor: Color,
     inactiveColor: Color,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .clip(androidx.compose.foundation.shape.RoundedCornerShape(26.dp))
             .background(if (selected) activeColor else Color.Transparent)
             .padding(vertical = 12.dp)

@@ -1,14 +1,13 @@
 package com.fittracksa.app.ui.screens.achievements
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
@@ -59,14 +58,17 @@ fun AchievementsScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(text = achievement.description, color = textColor)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    ) {
                         TextButton(
                             onClick = { viewModel.joinChallenge(achievement.id) },
                             colors = ButtonDefaults.textButtonColors(contentColor = textColor)
                         ) {
                             Text(strings.joinChallenge, color = textColor)
                         }
-                        Spacer(modifier = Modifier.weight(1f))
                         Text(text = "${strings.seeStreakDetails}: ${achievement.streakDays} days", color = textColor)
                     }
                 }

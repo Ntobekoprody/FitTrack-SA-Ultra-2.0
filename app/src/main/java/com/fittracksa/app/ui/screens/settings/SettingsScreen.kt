@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -317,7 +316,7 @@ private fun SettingsLinkRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(icon, contentDescription = null, tint = Lime)
-        Column(Modifier.weight(1f)) {
+        Column(modifier = Modifier.padding(end = 12.dp)) {
             Text(title, fontWeight = FontWeight.SemiBold, color = textColor)
             Text(description, color = textColor.copy(alpha = 0.7f), fontSize = 12.sp)
         }

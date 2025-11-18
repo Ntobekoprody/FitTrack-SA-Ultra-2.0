@@ -2,13 +2,14 @@ package com.fittracksa.app.ui.screens.activity
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -151,29 +152,32 @@ fun ActivityScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        FitPrimaryButton(
-                            label = strings.saveActivity,
-                            leadingIcon = Icons.Rounded.Check,
-                            modifier = Modifier.weight(1f)
+                    BoxWithConstraints {
+                        val buttonWidth = (maxWidth - 12.dp) / 2
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            val minutes = duration.toIntOrNull() ?: 0
-                            if (activityType.isNotBlank() && minutes > 0) {
-                                viewModel.logActivity(activityType, minutes)
+                            FitPrimaryButton(
+                                label = strings.saveActivity,
+                                leadingIcon = Icons.Rounded.Check,
+                                modifier = Modifier.width(buttonWidth)
+                            ) {
+                                val minutes = duration.toIntOrNull() ?: 0
+                                if (activityType.isNotBlank() && minutes > 0) {
+                                    viewModel.logActivity(activityType, minutes)
+                                    activityType = "Running"
+                                    duration = "30"
+                                }
+                            }
+                            FitSecondaryButton(
+                                label = strings.cancel,
+                                leadingIcon = Icons.Rounded.Close,
+                                modifier = Modifier.width(buttonWidth)
+                            ) {
                                 activityType = "Running"
                                 duration = "30"
                             }
-                        }
-                        FitSecondaryButton(
-                            label = strings.cancel,
-                            leadingIcon = Icons.Rounded.Close,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            activityType = "Running"
-                            duration = "30"
                         }
                     }
 
@@ -227,7 +231,7 @@ private fun ActivityListRow(activity: ActivityEntity, formatter: DateTimeFormatt
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.padding(end = 12.dp)) {
             Text(text = activity.type, fontWeight = FontWeight.SemiBold, color = textColor)
             Text(
                 text = "${activity.durationMinutes} minutes",

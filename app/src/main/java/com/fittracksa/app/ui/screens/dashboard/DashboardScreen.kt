@@ -2,14 +2,14 @@ package com.fittracksa.app.ui.screens.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
@@ -84,25 +84,31 @@ fun DashboardScreen(
         }
 
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                DashboardStatCard(
-                    title = "Day Streak",
-                    value = streak.toString(),
-                    icon = Icons.Rounded.Timer,
-                    isDark = isDarkMode
-                )
-                DashboardStatCard(
-                    title = "Min Active",
-                    value = activeMinutes.toString(),
-                    icon = Icons.Rounded.FitnessCenter,
-                    isDark = isDarkMode
-                )
-                DashboardStatCard(
-                    title = "Calories",
-                    value = formatCalories(dailyCalories),
-                    icon = Icons.Rounded.LocalFireDepartment,
-                    isDark = isDarkMode
-                )
+            BoxWithConstraints {
+                val cardWidth = (maxWidth - 24.dp) / 3
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+                    DashboardStatCard(
+                        title = "Day Streak",
+                        value = streak.toString(),
+                        icon = Icons.Rounded.Timer,
+                        isDark = isDarkMode,
+                        modifier = Modifier.width(cardWidth)
+                    )
+                    DashboardStatCard(
+                        title = "Min Active",
+                        value = activeMinutes.toString(),
+                        icon = Icons.Rounded.FitnessCenter,
+                        isDark = isDarkMode,
+                        modifier = Modifier.width(cardWidth)
+                    )
+                    DashboardStatCard(
+                        title = "Calories",
+                        value = formatCalories(dailyCalories),
+                        icon = Icons.Rounded.LocalFireDepartment,
+                        isDark = isDarkMode,
+                        modifier = Modifier.width(cardWidth)
+                    )
+                }
             }
         }
 
@@ -165,11 +171,17 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun RowScope.DashboardStatCard(title: String, value: String, icon: ImageVector, isDark: Boolean) {
+private fun DashboardStatCard(
+    title: String,
+    value: String,
+    icon: ImageVector,
+    isDark: Boolean,
+    modifier: Modifier = Modifier
+) {
     val container = if (isDark) Black else White
     val textColor = if (isDark) Lime else Black
     Card(
-        modifier = Modifier.weight(1f),
+        modifier = modifier,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = container),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -206,7 +218,7 @@ private fun AchievementRow(achievement: AchievementEntity, isDarkMode: Boolean) 
                 modifier = Modifier.padding(8.dp)
             )
         }
-        Column(Modifier.weight(1f)) {
+        Column(modifier = Modifier.padding(end = 12.dp)) {
             Text(text = achievement.badgeName, fontWeight = FontWeight.SemiBold, color = textColor)
             Text(
                 text = achievement.description,
