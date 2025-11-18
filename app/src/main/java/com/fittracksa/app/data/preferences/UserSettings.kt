@@ -5,11 +5,13 @@ data class UserSettings(
     val language: Language = Language.ENGLISH,
     val notificationsEnabled: Boolean = true,
     val displayName: String = DEFAULT_DISPLAY_NAME,
-    val profileImageUri: String? = null
+    val profileImageUri: String? = null,
+    val email: String = DEFAULT_EMAIL
 ) {
     enum class Language { ENGLISH, ISIZULU }
 
     companion object {
         const val DEFAULT_DISPLAY_NAME = "FitTrack Athlete"
+        const val DEFAULT_EMAIL = "you@fittracksa.com"
     }
 }

@@ -36,6 +36,7 @@ import com.fittracksa.app.ui.screens.activity.ActivityScreen
 import com.fittracksa.app.ui.screens.achievements.AchievementsScreen
 import com.fittracksa.app.ui.screens.dashboard.DashboardScreen
 import com.fittracksa.app.ui.screens.login.LoginScreen
+import com.fittracksa.app.ui.screens.login.ProfileSetupScreen
 import com.fittracksa.app.ui.screens.nutrition.NutritionScreen
 import com.fittracksa.app.ui.screens.progress.ProgressScreen
 import com.fittracksa.app.ui.screens.settings.SettingsScreen
@@ -45,6 +46,7 @@ import com.fittracksa.app.ui.theme.White
 
 sealed class Destination(val route: String) {
     data object Login : Destination("login")
+    data object Registration : Destination("registration")
     data object Dashboard : Destination("dashboard")
     data object Activity : Destination("activity")
     data object Nutrition : Destination("nutrition")
@@ -92,7 +94,7 @@ fun AppRoot(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute != Destination.Login.route
+    val showBottomBar = currentRoute != Destination.Login.route && currentRoute != Destination.Registration.route
     val isDark = userSettings.isDarkMode
     val barContainer = if (isDark) Black else White
     val activeColor = if (isDark) Lime else Lime
@@ -179,7 +181,24 @@ private fun AppNavHost(
                     navController.navigate(Destination.Dashboard.route) {
                         popUpTo(Destination.Login.route) { inclusive = true }
                     }
+                },
+                onRegister = {
+                    navController.navigate(Destination.Registration.route)
                 }
+            )
+        }
+        composable(Destination.Registration.route) {
+            ProfileSetupScreen(
+                strings = strings,
+                isDarkMode = isDark,
+                settingsViewModel = settingsViewModel,
+                onRegistrationComplete = { name ->
+                    notifier.post(FitTrackNotifier.Event.LoggedIn(name))
+                    navController.navigate(Destination.Dashboard.route) {
+                        popUpTo(Destination.Login.route) { inclusive = true }
+                    }
+                },
+                onBackToLogin = { navController.popBackStack() }
             )
         }
         composable(Destination.Dashboard.route) {

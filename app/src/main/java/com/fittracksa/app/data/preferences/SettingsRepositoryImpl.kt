@@ -30,6 +30,7 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
         val NOTIFICATIONS = booleanPreferencesKey("notifications")
         val DISPLAY_NAME = stringPreferencesKey("display_name")
         val PROFILE_IMAGE = stringPreferencesKey("profile_image")
+        val EMAIL = stringPreferencesKey("email")
     }
 
     override val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
@@ -41,7 +42,8 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
             } ?: UserSettings.Language.ENGLISH,
             notificationsEnabled = prefs[Keys.NOTIFICATIONS] ?: true,
             displayName = prefs[Keys.DISPLAY_NAME] ?: UserSettings.DEFAULT_DISPLAY_NAME,
-            profileImageUri = prefs[Keys.PROFILE_IMAGE]
+            profileImageUri = prefs[Keys.PROFILE_IMAGE],
+            email = prefs[Keys.EMAIL] ?: UserSettings.DEFAULT_EMAIL
         )
     }
 
@@ -68,6 +70,13 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
         dataStore.edit { prefs ->
             val value = name.ifBlank { UserSettings.DEFAULT_DISPLAY_NAME }
             prefs[Keys.DISPLAY_NAME] = value
+        }
+    }
+
+    override suspend fun setEmail(email: String) {
+        dataStore.edit { prefs ->
+            val sanitized = email.trim().ifBlank { UserSettings.DEFAULT_EMAIL }
+            prefs[Keys.EMAIL] = sanitized
         }
     }
 

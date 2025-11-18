@@ -27,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -66,6 +68,7 @@ fun SettingsScreen(
     val textColor = if (isDarkMode) Lime else Black
     val cardColor = if (isDarkMode) Black else White
     var displayNameInput by remember(settings.displayName) { mutableStateOf(settings.displayName) }
+    var emailInput by remember(settings.email) { mutableStateOf(settings.email) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -90,8 +93,13 @@ fun SettingsScreen(
         item {
             ProfileCard(
                 nameInput = displayNameInput,
+                emailInput = emailInput,
                 onNameChange = { displayNameInput = it },
-                onSaveProfile = { settingsViewModel.setDisplayName(displayNameInput) },
+                onEmailChange = { emailInput = it },
+                onSaveProfile = {
+                    settingsViewModel.setDisplayName(displayNameInput)
+                    settingsViewModel.setEmail(emailInput)
+                },
                 onChangePhoto = {
                     photoPickerLauncher.launch("image/*")
                 },
@@ -179,7 +187,9 @@ fun SettingsScreen(
 @Composable
 private fun ProfileCard(
     nameInput: String,
+    emailInput: String,
     onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
     onSaveProfile: () -> Unit,
     onChangePhoto: () -> Unit,
     onRemovePhoto: () -> Unit,
@@ -210,7 +220,11 @@ private fun ProfileCard(
                 ProfileAvatar(photoUri = profileImageUri, isDarkMode = isDarkMode)
                 Column {
                     Text(nameInput.ifBlank { strings.profileNameLabel }, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
-                    Text(strings.profileEmailPlaceholder, color = textColor.copy(alpha = 0.7f), fontSize = 14.sp)
+                    Text(
+                        emailInput.ifBlank { strings.profileEmailPlaceholder },
+                        color = textColor.copy(alpha = 0.7f),
+                        fontSize = 14.sp
+                    )
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -221,6 +235,15 @@ private fun ProfileCard(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     colors = fieldColors
+                )
+                Text(strings.profileEmailLabel, fontWeight = FontWeight.SemiBold, color = textColor)
+                OutlinedTextField(
+                    value = emailInput,
+                    onValueChange = onEmailChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    colors = fieldColors,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
             }
             FitSecondaryButton(label = strings.changePhoto, leadingIcon = Icons.Rounded.PhotoCamera) {

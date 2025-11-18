@@ -31,7 +31,8 @@ import com.fittracksa.app.ui.theme.White
 fun LoginScreen(
     strings: AppStrings,
     isDarkMode: Boolean,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    onRegister: () -> Unit
 ) {
     val surface = if (isDarkMode) Black else White
     val titleColor = if (isDarkMode) Lime else Black
@@ -59,11 +60,12 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        FitButton(label = "${strings.emailLogin} → Dashboard", onClick = onLoginSuccess)
-        Spacer(modifier = Modifier.height(16.dp))
-        FitButton(label = "${strings.googleSso} → Dashboard", onClick = onLoginSuccess)
-        Spacer(modifier = Modifier.height(16.dp))
-        FitButton(label = "${strings.biometric} → Dashboard") {
+        FitButton(
+            label = "${strings.biometric} → Dashboard",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+        ) {
             val helper = biometricAuthenticator
             if (helper == null || !helper.canAuthenticate()) {
                 Toast.makeText(context, strings.biometricUnavailable, Toast.LENGTH_SHORT).show()
@@ -87,9 +89,13 @@ fun LoginScreen(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        FitButton(label = "${strings.register} → Registration", onClick = onLoginSuccess)
-        Spacer(modifier = Modifier.height(16.dp))
-        FitButton(label = "${strings.forgotPassword} → Reset Flow", onClick = onLoginSuccess)
+        Spacer(modifier = Modifier.height(24.dp))
+        FitButton(
+            label = "${strings.register} → Registration",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            onClick = onRegister
+        )
     }
 }

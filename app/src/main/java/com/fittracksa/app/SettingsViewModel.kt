@@ -33,6 +33,10 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setDisplayName(name) }
     }
 
+    fun setEmail(email: String) {
+        viewModelScope.launch { settingsRepository.setEmail(email) }
+    }
+
     fun setProfileImage(uri: String?) {
         viewModelScope.launch { settingsRepository.setProfileImage(uri) }
     }
