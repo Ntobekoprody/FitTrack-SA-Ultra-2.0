@@ -1,5 +1,7 @@
 package com.fittracksa.app.ui.screens.login
 
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,12 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fittracksa.app.biometrics.BiometricAuthenticator
 import com.fittracksa.app.ui.AppStrings
 import com.fittracksa.app.ui.screens.common.FitButton
 import com.fittracksa.app.ui.theme.Black
@@ -30,6 +35,11 @@ fun LoginScreen(
 ) {
     val surface = if (isDarkMode) Black else White
     val titleColor = if (isDarkMode) Lime else Black
+    val context = LocalContext.current
+    val biometricAuthenticator = remember(context) {
+        (context as? ComponentActivity)?.let { BiometricAuthenticator(it) }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +63,30 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
         FitButton(label = "${strings.googleSso} → Dashboard", onClick = onLoginSuccess)
         Spacer(modifier = Modifier.height(16.dp))
-        FitButton(label = "${strings.biometric} → Dashboard", onClick = onLoginSuccess)
+        FitButton(label = "${strings.biometric} → Dashboard") {
+            val helper = biometricAuthenticator
+            if (helper == null || !helper.canAuthenticate()) {
+                Toast.makeText(context, strings.biometricUnavailable, Toast.LENGTH_SHORT).show()
+                return@FitButton
+            }
+            helper.authenticate(
+                title = strings.biometric,
+                subtitle = strings.biometricSubtitle,
+                negativeButtonText = strings.cancel,
+                onSuccess = {
+                    Toast.makeText(context, strings.biometric, Toast.LENGTH_SHORT).show()
+                    onLoginSuccess()
+                },
+                onError = { message ->
+                    val text = if (message == "BIOMETRIC_FAILED") {
+                        strings.biometricFailed
+                    } else {
+                        message
+                    }
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         FitButton(label = "${strings.register} → Registration", onClick = onLoginSuccess)
         Spacer(modifier = Modifier.height(16.dp))
