@@ -1,7 +1,6 @@
 package com.fittracksa.app.ui.screens.settings
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -67,7 +66,7 @@ fun SettingsScreen(
     val cardColor = if (isDarkMode) Black else White
     var displayNameInput by remember(settings.displayName) { mutableStateOf(settings.displayName) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
+        contract = ActivityResultContracts.GetContent()
     ) { uri ->
         settingsViewModel.setProfileImage(uri?.toString())
     }
@@ -93,9 +92,7 @@ fun SettingsScreen(
                 onNameChange = { displayNameInput = it },
                 onSaveProfile = { settingsViewModel.setDisplayName(displayNameInput) },
                 onChangePhoto = {
-                    photoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
+                    photoPickerLauncher.launch("image/*")
                 },
                 onRemovePhoto = { settingsViewModel.setProfileImage(null) },
                 profileImageUri = settings.profileImageUri,
