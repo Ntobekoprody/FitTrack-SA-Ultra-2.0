@@ -36,6 +36,7 @@ import com.fittracksa.app.ui.screens.activity.ActivityScreen
 import com.fittracksa.app.ui.screens.achievements.AchievementsScreen
 import com.fittracksa.app.ui.screens.dashboard.DashboardScreen
 import com.fittracksa.app.ui.screens.login.LoginScreen
+import com.fittracksa.app.ui.screens.login.RegisterScreen
 import com.fittracksa.app.ui.screens.nutrition.NutritionScreen
 import com.fittracksa.app.ui.screens.progress.ProgressScreen
 import com.fittracksa.app.ui.screens.settings.SettingsScreen
@@ -45,6 +46,7 @@ import com.fittracksa.app.ui.theme.White
 
 sealed class Destination(val route: String) {
     data object Login : Destination("login")
+    data object Register : Destination("register")
     data object Dashboard : Destination("dashboard")
     data object Activity : Destination("activity")
     data object Nutrition : Destination("nutrition")
@@ -179,9 +181,31 @@ private fun AppNavHost(
                     navController.navigate(Destination.Dashboard.route) {
                         popUpTo(Destination.Login.route) { inclusive = true }
                     }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Destination.Register.route)
                 }
             )
         }
+
+        composable(Destination.Register.route) {
+            RegisterScreen(
+                strings = strings,
+                isDarkMode = isDark,
+                onRegisterSuccess = {
+                    notifier.post(FitTrackNotifier.Event.LoggedIn(userSettings.displayName))
+                    navController.navigate(Destination.Dashboard.route) {
+                        popUpTo(Destination.Register.route) { inclusive = true }
+                    }
+                },
+                onBackToLogin = {
+                    navController.navigate(Destination.Login.route) {
+                        popUpTo(Destination.Register.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Destination.Dashboard.route) {
             DashboardScreen(strings = strings, isDarkMode = isDark, viewModel = dataViewModel, onNavigate = { dest ->
                 when (dest) {
@@ -214,6 +238,8 @@ private fun AppNavHost(
                 isDarkMode = isDark,
                 settingsViewModel = settingsViewModel,
                 onSignOut = {
+                    // when settings triggers sign out, log out and navigate to login
+                    // SettingsScreen will call this callback after it performs sign-out actions
                     notifier.post(FitTrackNotifier.Event.SignedOut(userSettings.displayName))
                     navController.navigate(Destination.Login.route) {
                         popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
