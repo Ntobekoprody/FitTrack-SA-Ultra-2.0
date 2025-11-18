@@ -40,7 +40,13 @@ data class AppStrings(
     val notifications: String,
     val manageData: String,
     val signOut: String,
-    val darkMode: String
+    val darkMode: String,
+    val profileSectionTitle: String,
+    val profileNameLabel: String,
+    val profileEmailPlaceholder: String,
+    val changePhoto: String,
+    val removePhoto: String,
+    val saveProfile: String
 )
 
 fun stringsFor(language: UserSettings.Language): AppStrings = when (language) {
@@ -82,7 +88,13 @@ fun stringsFor(language: UserSettings.Language): AppStrings = when (language) {
         notifications = "Notifications On/Off",
         manageData = "Manage Data",
         signOut = "Sign Out",
-        darkMode = "Theme (Dark/Light)"
+        darkMode = "Theme (Dark/Light)",
+        profileSectionTitle = "Profile",
+        profileNameLabel = "Display name",
+        profileEmailPlaceholder = "john@example.com",
+        changePhoto = "Change photo",
+        removePhoto = "Remove photo",
+        saveProfile = "Save profile"
     )
     UserSettings.Language.ISIZULU -> AppStrings(
         loginTitle = "Siyakwamukela e-FitTrack SA",
@@ -122,6 +134,12 @@ fun stringsFor(language: UserSettings.Language): AppStrings = when (language) {
         notifications = "Izaziso On/Off",
         manageData = "Phatha Idatha",
         signOut = "Phuma",
-        darkMode = "Itimu (Mnyama/Khanyayo)"
+        darkMode = "Itimu (Mnyama/Khanyayo)",
+        profileSectionTitle = "Iphrofayela",
+        profileNameLabel = "Igama olibonisayo",
+        profileEmailPlaceholder = "john@example.com",
+        changePhoto = "Shintsha isithombe",
+        removePhoto = "Susa isithombe",
+        saveProfile = "Gcina iphrofayela"
     )
 }

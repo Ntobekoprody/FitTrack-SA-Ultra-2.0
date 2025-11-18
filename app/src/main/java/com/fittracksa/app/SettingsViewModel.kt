@@ -29,6 +29,14 @@ class SettingsViewModel(
         viewModelScope.launch { settingsRepository.setNotifications(enabled) }
     }
 
+    fun setDisplayName(name: String) {
+        viewModelScope.launch { settingsRepository.setDisplayName(name) }
+    }
+
+    fun setProfileImage(uri: String?) {
+        viewModelScope.launch { settingsRepository.setProfileImage(uri) }
+    }
+
     companion object {
         fun factory(container: AppContainer): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
