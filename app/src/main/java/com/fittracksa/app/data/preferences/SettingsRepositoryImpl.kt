@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.remove
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -75,7 +74,7 @@ class SettingsRepositoryImpl(private val context: Context) : SettingsRepository 
     override suspend fun setProfileImage(uri: String?) {
         dataStore.edit { prefs ->
             if (uri.isNullOrBlank()) {
-                prefs.remove(Keys.PROFILE_IMAGE)
+                prefs -= Keys.PROFILE_IMAGE
             } else {
                 prefs[Keys.PROFILE_IMAGE] = uri
             }
