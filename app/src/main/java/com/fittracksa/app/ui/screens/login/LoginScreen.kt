@@ -1,7 +1,7 @@
 package com.fittracksa.app.ui.screens.login
 
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +37,7 @@ fun LoginScreen(
     val titleColor = if (isDarkMode) Lime else Black
     val context = LocalContext.current
     val biometricAuthenticator = remember(context) {
-        (context as? ComponentActivity)?.let { BiometricAuthenticator(it) }
+        (context as? FragmentActivity)?.let { BiometricAuthenticator(it) }
     }
 
     Column(

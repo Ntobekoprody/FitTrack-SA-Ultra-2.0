@@ -1,13 +1,13 @@
 package com.fittracksa.app.biometrics
 
 import android.os.Build
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 
 class BiometricAuthenticator(
-    private val activity: ComponentActivity
+    private val activity: FragmentActivity
 ) {
 
     private val authenticators =

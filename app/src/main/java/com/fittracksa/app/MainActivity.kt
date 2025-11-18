@@ -1,15 +1,15 @@
 package com.fittracksa.app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.appcompat.app.AppCompatActivity
 import com.fittracksa.app.ui.AppRoot
 import com.fittracksa.app.ui.theme.FitTrackTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val appContainer by lazy { (application as FitTrackApp).container }
 
